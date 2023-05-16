@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        * {
+            color: rgb(88, 88, 88);
+            text-align: center;
+        }
+
+        /* table container */
+        .tableContainer {
+            overflow-x: auto;
+        }
+
+        /* CSS styles for the chart table */
+        #chart-table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+
+        }
+
+        #chart-table th,
+        #chart-table td {
+            padding: 8px;
+            border-top: 1px solid rgba(196, 192, 192, 0.24);
+        }
+
+        #chart-table th {
+            font-family: monospace;
+            font-size: larger;
+            background-color: #f7f1f146;
+        }
+
+        #chart-table tr.highlighted {
+            background-color: #22e2e9a2;
+        }
+
+        /* CSS styles for the circle and slider */
+        #circle-container {
+
+            /* background-color: #e5e5f7;
+opacity: 0.7;
+background-image:  repeating-linear-gradient(45deg, #444cf7 25%, transparent 25%, transparent 75%, #444cf7 75%, #444cf7), repeating-linear-gradient(45deg, #444cf7 25%, #e5e5f7 25%, #e5e5f7 75%, #444cf7 75%, #444cf7);
+background-position: 0 0, 4px 4px;
+background-size: 8px 8px; */
+
+            height: 100px;
+            background-color: #e5e5f7;
+            opacity: 0.7;
+            background-image: linear-gradient(#000000 0.8px, transparent 0.8px), linear-gradient(to right, #000000 0.8px, #e5e5f7 0.8px);
+            /* background-size: 10px 10px; */
+
+            margin: auto;
+            margin-bottom: 20px;
+            border: solid rgb(114, 124, 124) 1px;
+            border-top-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            padding-top: 50px;
+            padding-bottom: 50px;
+        }
+
+        #circle {
+            background-color: transparent;
+            border: 3px solid rgb(255, 230, 3);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: auto;
+            color: black;
+            font-size: larger;
+        }
+
+        #diameter-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            cursor: pointer;
+            outline: none;
+            overflow: hidden;
+            border-radius: 16px;
+        }
+
+        #diameter-slider:hover {
+            opacity: 1;
+        }
+
+        #diameter-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 15px;
+            width: 15px;
+            background-color: #fff;
+            border-radius: 50%;
+            border: 3px solid rgb(44, 156, 175);
+            box-shadow: -707px 0 0 700px rgba(28, 230, 203, 0.747);
+        }
+
+
+        #diameter-slider::-webkit-slider-runnable-track {
+            height: 15px;
+            background: #ccc;
+            border-radius: 16px;
+        }
+
+        #diameter-slider::-moz-range-track {
+            height: 15px;
+            background: #ccc;
+            border-radius: 16px;
+        }
+
+        #selected-diameter {
+            padding: 20px;
+            background-color: rgba(240, 240, 240, 0.171);
+            font-size: larger;
+            
+        }
+    </style>
+</head>
+ 
+<body>
+    <div class="aa"></div>
+    <div id="circle-container">
+        <div id="circle"></div>
+    </div>
+    <input type="range" id="diameter-slider" min="0" max="26" step="1" value="0">
+    <p id="selected-diameter">Selected Diameter: 12.37 mm</p>
+    <div class="tableContainer">
+        <table id="chart-table">
+            <thead>
+                <tr>
+                    <th>India_China_Japan_South_America</th>
+                    <!-- <th>Diameter_mm</th> -->
+                    <!-- <th>Circumference_mm</th> -->
+                    <th>USA_Canada_UK_Australia</th>
+                    <th>UK_Australia_New_Zealand</th>
+                    <th>France</th>
+                    <th>Germany</th>
+                    <th>Italy_Spain_Netherland_Switzerland</th>
+                </tr>
+            </thead>
+            <tbody id="tbd">
+
+            </tbody>
+
+        </table>
+    </div>
+
+</body>
+
+</html>
+
+<script>
+
+    const rings = [
+        {
+            "India_China_Japan_South_America": "#1",
+            "Diameter_mm": "12.37",
+            "Circumference_mm": "39",
+            "USA_Canada_UK_Australia": "1",
+            "UK_Australia_New_Zealand": "B",
+            "France": "---",
+            "Germany": "---",
+            "Italy_Spain_Netherland_Switzerland": "---\r"
+        },
+        {
+            "India_China_Japan_South_America": "#2",
+            "Diameter_mm": "13.2",
+            "Circumference_mm": "41.5",
+            "USA_Canada_UK_Australia": "2",
+            "UK_Australia_New_Zealand": "D",
+            "France": "41 1/2",
+            "Germany": "13 1/4",
+            "Italy_Spain_Netherland_Switzerland": "1 1/2\r"
+        },
+        {
+            "India_China_Japan_South_America": "#3",
+            "Diameter_mm": "13.7",
+            "Circumference_mm": "42.9",
+            "USA_Canada_UK_Australia": "2 1/2",
+            "UK_Australia_New_Zealand": "E",
+            "France": "42 3/4",
+            "Germany": "13 3/4",
+            "Italy_Spain_Netherland_Switzerland": "2 3/4\r"
+        },
+        {
+            "India_China_Japan_South_America": "#4",
+            "Diameter_mm": "14",
+            "Circumference_mm": "44",
+            "USA_Canada_UK_Australia": "3",
+            "UK_Australia_New_Zealand": "F",
+            "France": "44",
+            "Germany": "14",
+            "Italy_Spain_Netherland_Switzerland": "4\r"
+        },
+        {
+            "India_China_Japan_South_America": "#5",
+            "Diameter_mm": "14.4",
+            "Circumference_mm": "45",
+            "USA_Canada_UK_Australia": "3 1/2",
+            "UK_Australia_New_Zealand": "G",
+            "France": "45 1/4",
+            "Germany": "14 1/2",
+            "Italy_Spain_Netherland_Switzerland": "5 1/4\r"
+        },
+        {
+            "India_China_Japan_South_America": "#6",
+            "Diameter_mm": "14.7",
+            "Circumference_mm": "46.1",
+            "USA_Canada_UK_Australia": "3 3/4",
+            "UK_Australia_New_Zealand": "G 1/2",
+            "France": "45 7/8",
+            "Germany": "14 3/4",
+            "Italy_Spain_Netherland_Switzerland": "5 7/8\r"
+        },
+        {
+            "India_China_Japan_South_America": "#7",
+            "Diameter_mm": "15",
+            "Circumference_mm": "46.8",
+            "USA_Canada_UK_Australia": "4",
+            "UK_Australia_New_Zealand": "H 1/2",
+            "France": "46 1/2",
+            "Germany": "15",
+            "Italy_Spain_Netherland_Switzerland": "6 1/2\r"
+        },
+        {
+            "India_China_Japan_South_America": "#8",
+            "Diameter_mm": "15.4",
+            "Circumference_mm": "47.8",
+            "USA_Canada_UK_Australia": "4 1/2",
+            "UK_Australia_New_Zealand": "I 1/2",
+            "France": "47 3/4",
+            "Germany": "15 1/2",
+            "Italy_Spain_Netherland_Switzerland": "7 3/4\r"
+        },
+        {
+            "India_China_Japan_South_America": "#9",
+            "Diameter_mm": "15.7",
+            "Circumference_mm": "49.2",
+            "USA_Canada_UK_Australia": "5",
+            "UK_Australia_New_Zealand": "J 1/2",
+            "France": "49",
+            "Germany": "15 3/4",
+            "Italy_Spain_Netherland_Switzerland": "9\r"
+        },
+        {
+            "India_China_Japan_South_America": "#10",
+            "Diameter_mm": "16",
+            "Circumference_mm": "50.3",
+            "USA_Canada_UK_Australia": "5 1/2",
+            "UK_Australia_New_Zealand": "K 1/2",
+            "France": "50 1/4",
+            "Germany": "16 1/4",
+            "Italy_Spain_Netherland_Switzerland": "10 1/4\r"
+        },
+        {
+            "India_China_Japan_South_America": "#11",
+            "Diameter_mm": "16.4",
+            "Circumference_mm": "51.3",
+            "USA_Canada_UK_Australia": "5 3/4",
+            "UK_Australia_New_Zealand": "L",
+            "France": "50 7/8",
+            "Germany": "---",
+            "Italy_Spain_Netherland_Switzerland": "10 7/8\r"
+        },
+        {
+            "India_China_Japan_South_America": "#12",
+            "Diameter_mm": "16.7",
+            "Circumference_mm": "52.4",
+            "USA_Canada_UK_Australia": "6",
+            "UK_Australia_New_Zealand": "L 1/2",
+            "France": "51 1/2",
+            "Germany": "16 1/2",
+            "Italy_Spain_Netherland_Switzerland": "11 1/2\r"
+        },
+        {
+            "India_China_Japan_South_America": "#13",
+            "Diameter_mm": "17",
+            "Circumference_mm": "53.4",
+            "USA_Canada_UK_Australia": "6 1/2",
+            "UK_Australia_New_Zealand": "M 1/2",
+            "France": "52 3/4",
+            "Germany": "17",
+            "Italy_Spain_Netherland_Switzerland": "12 3/4\r"
+        },
+        {
+            "India_China_Japan_South_America": "#14",
+            "Diameter_mm": "17.4",
+            "Circumference_mm": "54.5",
+            "USA_Canada_UK_Australia": "7",
+            "UK_Australia_New_Zealand": "O",
+            "France": "54",
+            "Germany": "17 1/4",
+            "Italy_Spain_Netherland_Switzerland": "14\r"
+        },
+        {
+            "India_China_Japan_South_America": "#15",
+            "Diameter_mm": "17.7",
+            "Circumference_mm": "55.5",
+            "USA_Canada_UK_Australia": "7.5",
+            "UK_Australia_New_Zealand": "P",
+            "France": "55 1/4",
+            "Germany": "17 3/4",
+            "Italy_Spain_Netherland_Switzerland": "15 1/4\r"
+        },
+        {
+            "India_China_Japan_South_America": "#16",
+            "Diameter_mm": "18",
+            "Circumference_mm": "56.5",
+            "USA_Canada_UK_Australia": "8",
+            "UK_Australia_New_Zealand": "Q",
+            "France": "56 1/2",
+            "Germany": "18",
+            "Italy_Spain_Netherland_Switzerland": "16 1/2\r"
+        },
+        {
+            "India_China_Japan_South_America": "#17",
+            "Diameter_mm": "18.4",
+            "Circumference_mm": "57.6",
+            "USA_Canada_UK_Australia": "8.5",
+            "UK_Australia_New_Zealand": "R",
+            "France": "57 3/4",
+            "Germany": "18 1/2",
+            "Italy_Spain_Netherland_Switzerland": "17 3/4\r"
+        },
+        {
+            "India_China_Japan_South_America": "#18",
+            "Diameter_mm": "18.7",
+            "Circumference_mm": "58.6",
+            "USA_Canada_UK_Australia": "9",
+            "UK_Australia_New_Zealand": "S",
+            "France": "59",
+            "Germany": "19",
+            "Italy_Spain_Netherland_Switzerland": "19\r"
+        },
+        {
+            "India_China_Japan_South_America": "#19",
+            "Diameter_mm": "19",
+            "Circumference_mm": "59.7",
+            "USA_Canada_UK_Australia": "9.5",
+            "UK_Australia_New_Zealand": "---",
+            "France": "60 1/4",
+            "Germany": "19 1/2",
+            "Italy_Spain_Netherland_Switzerland": "20 1/4\r"
+        },
+        {
+            "India_China_Japan_South_America": "#20",
+            "Diameter_mm": "19.4",
+            "Circumference_mm": "60.7",
+            "USA_Canada_UK_Australia": "10",
+            "UK_Australia_New_Zealand": "T 1/2",
+            "France": "61 1/2",
+            "Germany": "20",
+            "Italy_Spain_Netherland_Switzerland": "21 1/2\r"
+        },
+        {
+            "India_China_Japan_South_America": "#21",
+            "Diameter_mm": "19.7",
+            "Circumference_mm": "61.8",
+            "USA_Canada_UK_Australia": "10.25",
+            "UK_Australia_New_Zealand": "U",
+            "France": "62 1/4",
+            "Germany": "20 1/4",
+            "Italy_Spain_Netherland_Switzerland": "20 1/4\r"
+        },
+        {
+            "India_China_Japan_South_America": "#22",
+            "Diameter_mm": "20",
+            "Circumference_mm": "62.8",
+            "USA_Canada_UK_Australia": "10.5",
+            "UK_Australia_New_Zealand": "U 1/2",
+            "France": "62 3/4",
+            "Germany": "20 1/2",
+            "Italy_Spain_Netherland_Switzerland": "22 3/4\r"
+        },
+        {
+            "India_China_Japan_South_America": "#23",
+            "Diameter_mm": "20.4",
+            "Circumference_mm": "63.9",
+            "USA_Canada_UK_Australia": "11",
+            "UK_Australia_New_Zealand": "V 1/2",
+            "France": "64",
+            "Germany": "20 3/4",
+            "Italy_Spain_Netherland_Switzerland": "24\r"
+        },
+        {
+            "India_China_Japan_South_America": "#24",
+            "Diameter_mm": "20.7",
+            "Circumference_mm": "64.9",
+            "USA_Canada_UK_Australia": "11.5",
+            "UK_Australia_New_Zealand": "W 1/2",
+            "France": "65 1/2",
+            "Germany": "21",
+            "Italy_Spain_Netherland_Switzerland": "25 1/4\r"
+        },
+        {
+            "India_China_Japan_South_America": "#25",
+            "Diameter_mm": "21",
+            "Circumference_mm": "66",
+            "USA_Canada_UK_Australia": "12",
+            "UK_Australia_New_Zealand": "Y",
+            "France": "66 1/2",
+            "Germany": "21 1/4",
+            "Italy_Spain_Netherland_Switzerland": "26 1/2\r"
+        },
+        {
+            "India_China_Japan_South_America": "#26",
+            "Diameter_mm": "21.4",
+            "Circumference_mm": "67",
+            "USA_Canada_UK_Australia": "12.5",
+            "UK_Australia_New_Zealand": "Z",
+            "France": "67 3/4",
+            "Germany": "21 3/4",
+            "Italy_Spain_Netherland_Switzerland": "27 3/4\r"
+        },
+        {
+            "India_China_Japan_South_America": "#27",
+            "Diameter_mm": "21.7",
+            "Circumference_mm": "68",
+            "USA_Canada_UK_Australia": "13",
+            "UK_Australia_New_Zealand": "Z 1/2",
+            "France": "69",
+            "Germany": "22",
+            "Italy_Spain_Netherland_Switzerland": "29\r"
+        }
+    ]
+
+    window.addEventListener('DOMContentLoaded', (event) => {
+        var slider = document.getElementById("diameter-slider");
+        var circle = document.getElementById("circle");
+        var selectedDiameter = document.getElementById("selected-diameter");
+        var table = document.getElementById("chart-table");
+        var tbody = document.getElementById("tbd")
+        var rows = tbody.getElementsByTagName("tr");
+        var circleBackground = document.getElementById("circle-container")
+
+        rings.map(ring => {
+
+            const tr = document.createElement("tr")
+            const td1 = document.createElement("td")
+            // const td2 = document.createElement("td")
+            // const td3 = document.createElement("td")
+            const td4 = document.createElement("td")
+            const td5 = document.createElement("td")
+            const td6 = document.createElement("td")
+            const td7 = document.createElement("td")
+            const td8 = document.createElement("td")
+
+            td1.innerHTML = ring.India_China_Japan_South_America
+            // td2.innerHTML = ring.Diameter_mm
+            // td3.innerHTML = ring.Circumference_mm
+            td4.innerHTML = ring.USA_Canada_UK_Australia
+            td5.innerHTML = ring.UK_Australia_New_Zealand
+            td6.innerHTML = ring.France
+            td7.innerHTML = ring.Germany
+            td8.innerHTML = ring.Italy_Spain_Netherland_Switzerland
+
+            tr.appendChild(td1)
+            // tr.appendChild(td2)
+            // tr.appendChild(td3)
+            tr.appendChild(td4)
+            tr.appendChild(td5)
+            tr.appendChild(td6)
+            tr.appendChild(td7)
+            tr.appendChild(td8)
+
+            tbody.appendChild(tr)
+        })
+
+        // Get the minimum and maximum diameters from the table
+        var minDiameter = rings[0].Diameter_mm
+        var maxDiameter = rings[26].Diameter_mm
+
+        // update circle url
+        function updateCircle() {
+            var diameter = parseFloat(rings[slider.value].Diameter_mm);
+            var radius = diameter / 2;
+            var circleSize = radius * 3.78 * 2;
+            circle.innerHTML = diameter
+            circle.style.width = circleSize + "px";
+            circle.style.height = circleSize + "px";
+        }
+
+        // highlight row
+        function highlightRow() {
+            var diameter = rings[slider.value].Diameter_mm;
+            var selectedIndex = slider.value;
+            Array.from(rows).forEach(function (row, index) {
+                if (index == selectedIndex) {
+                    row.classList.add("highlighted");
+                } else {
+                    row.classList.remove("highlighted");
+                }
+            });
+        }
+
+        function updateSelectedDiameter() {
+            var diameter = parseFloat(rings[slider.value].Diameter_mm);
+            circleBackground.style.backgroundSize = `${300/diameter}px ${300/diameter}px`;
+            selectedDiameter.textContent = "Selected Diameter: " + diameter.toFixed(2) + " mm";
+        }
+
+        slider.addEventListener("input", function () {
+            updateCircle();
+            highlightRow();
+            updateSelectedDiameter();
+        });
+
+        // Initial setup
+        updateCircle();
+        highlightRow();
+        updateSelectedDiameter();
+    });
+</script>
