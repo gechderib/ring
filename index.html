@@ -10,7 +10,7 @@
 
         /* table container */
         .tableContainer {
-            overflow-x: auto;
+            overflow-x: scroll;
         }
 
         /* CSS styles for the chart table */
@@ -23,49 +23,42 @@
 
         #chart-table th,
         #chart-table td {
-            padding: 8px;
-            border-top: 1px solid rgba(196, 192, 192, 0.24);
+            padding-top: 8px;
+            padding-bottom: 8px;
+            padding-left: 0px;
+            padding-right: 0px;
+            border-top: 1px solid rgba(196, 192, 192, 0.527);
         }
 
         #chart-table th {
             font-family: monospace;
-            font-size: larger;
+            font-size: 30px;
             background-color: #f7f1f146;
         }
 
         #chart-table tr.highlighted {
-            background-color: #22e2e9a2;
+            background-color: #bbb9b9;
         }
 
         /* CSS styles for the circle and slider */
         #circle-container {
-
-            /* background-color: #e5e5f7;
-opacity: 0.7;
-background-image:  repeating-linear-gradient(45deg, #444cf7 25%, transparent 25%, transparent 75%, #444cf7 75%, #444cf7), repeating-linear-gradient(45deg, #444cf7 25%, #e5e5f7 25%, #e5e5f7 75%, #444cf7 75%, #444cf7);
-background-position: 0 0, 4px 4px;
-background-size: 8px 8px; */
-
             height: 100px;
             background-color: #e5e5f7;
             opacity: 0.7;
-            background-image: linear-gradient(#000000 0.8px, transparent 0.8px), linear-gradient(to right, #000000 0.8px, #e5e5f7 0.8px);
-            /* background-size: 10px 10px; */
+            background-image: linear-gradient(#b3b0b0 0.8px, transparent 0.8px), linear-gradient(to right, #d6d3d3 0.8px, #e5e5f7 0.8px);
 
             margin: auto;
             margin-bottom: 20px;
-            border: solid rgb(114, 124, 124) 1px;
-            border-top-left-radius: 20px;
-            border-bottom-right-radius: 20px;
-            padding-top: 50px;
-            padding-bottom: 50px;
+            padding-top: 40px;
+            padding-bottom: 40px;
         }
-
+        
         #circle {
             background-color: transparent;
-            border: 3px solid rgb(255, 230, 3);
+            border: 7px solid rgb(0, 0, 0);
             border-radius: 50%;
             display: flex;
+            background-color: rgb(231, 229, 229);
             justify-content: center;
             align-items: center;
             margin: auto;
@@ -94,8 +87,8 @@ background-size: 8px 8px; */
             width: 15px;
             background-color: #fff;
             border-radius: 50%;
-            border: 3px solid rgb(44, 156, 175);
-            box-shadow: -707px 0 0 700px rgba(28, 230, 203, 0.747);
+            border: 3px solid rgb(250, 226, 10);
+            box-shadow: -707px 0 0 700px rgb(245, 150, 7);
         }
 
 
@@ -114,31 +107,54 @@ background-size: 8px 8px; */
         #selected-diameter {
             padding: 20px;
             background-color: rgba(240, 240, 240, 0.171);
-            font-size: larger;
+            font-size: 30px;
             
+        }
+        .main-container {
+            display: flex;
+            justify-content: space-between;
+            /* align-items: center; */
+        }
+        .main-cont1 {
+            margin-top: 30px;
+            width: 70%;
+        }
+        .main-txt {
+            width: 30%;
+            font-size: 25px;
+            padding: 50px;
         }
     </style>
 </head>
  
 <body>
-    <div class="aa"></div>
-    <div id="circle-container">
-        <div id="circle"></div>
+    <div class="main-container">
+        <div class="main-cont1">
+            <div id="circle-container">
+                <div id="circle"></div>
+            </div>
+            <input type="range" id="diameter-slider" min="0" max="26" step="1" value="0">
+            <p id="selected-diameter">Selected Diameter: 12.37 mm</p>
+        
+        </div>
+        <div class="main-txt">
+            Put the Ring on the circle to determine its size. Use the slider or the table below to choose the right size of the ring.
+        </div>
+
     </div>
-    <input type="range" id="diameter-slider" min="0" max="26" step="1" value="0">
-    <p id="selected-diameter">Selected Diameter: 12.37 mm</p>
+
     <div class="tableContainer">
         <table id="chart-table">
             <thead>
                 <tr>
-                    <th>India_China_Japan_South_America</th>
+                    <th>IND_CHI_JP_SA</th>
                     <!-- <th>Diameter_mm</th> -->
                     <!-- <th>Circumference_mm</th> -->
-                    <th>USA_Canada_UK_Australia</th>
-                    <th>UK_Australia_New_Zealand</th>
-                    <th>France</th>
+                    <th>USA_CA_UK_AU</th>
+                    <th>UK_AU_NZ</th>
+                    <th>Fr</th>
                     <th>Germany</th>
-                    <th>Italy_Spain_Netherland_Switzerland</th>
+                    <th>ITl_ES_NL_CH </th>
                 </tr>
             </thead>
             <tbody id="tbd">
@@ -479,6 +495,7 @@ background-size: 8px 8px; */
             var radius = diameter / 2;
             var circleSize = radius * 3.78 * 2;
             circle.innerHTML = diameter
+            // circle.style.border = ``
             circle.style.width = circleSize + "px";
             circle.style.height = circleSize + "px";
         }
