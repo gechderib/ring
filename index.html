@@ -42,16 +42,6 @@
             background-color: #bbb9b9;
         }
 
-        @media screen and (min-width : 0px) and (max-width : 767px) {
-            #circle{
-                padding: 7px;
-            }
-        }
-        @media screen and (min-width: 768px) and (max-width: 1180px) {
-            #circle {
-                padding: 7px;
-            }
-        }
         /* CSS styles for the circle and slider */
         #circle-container {
             height: 100px;
@@ -510,14 +500,12 @@
 
         // update circle url
         function updateCircle() {
-            var pir = window.devicePixelRatio
-            console.log(pir)
             var diameter = parseFloat(rings[slider.value].Diameter_mm);
             var radius = diameter / 2;
-            var circleSize = radius * 3.78 * 2;
-            circle.innerHTML = diameter
-            circle.style.width =  circleSize  + "px";
-            circle.style.height = circleSize + "px";
+            var circleSize = radius * 2;
+            circle.innerText = diameter
+            circle.style.width =  circleSize  + "mm";
+            circle.style.height = circleSize + "mm";
         }
 
         // highlight row
