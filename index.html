@@ -59,10 +59,10 @@
 
         #circle {
             background-color: transparent;
-            border: 4px solid rgb(0, 0, 0);
-            border-radius: 50%;
+            /* border: 4px solid rgb(0, 0, 0);
+            border-radius: 50%; */
             display: flex;
-            background-color: rgb(231, 229, 229);
+            /* background-color: rgb(231, 229, 229); */
             justify-content: center;
             align-items: center;
             margin: auto;
@@ -137,8 +137,10 @@
 
 <body>
     <div class="main-container">
+
         <div class="main-cont1">
             <div id="circle-container">
+                <img id="circle-img" src="./images/12.37.png" alt="">
                 <div id="circle"></div>
             </div>
             <input type="range" id="diameter-slider" min="0" max="26" step="1" value="0">
@@ -503,8 +505,10 @@
             var diameter = parseFloat(rings[slider.value].Diameter_mm);
             var radius = diameter / 2;
             var circleSize = radius * 2;
-            circle.innerText = diameter
-            circle.style.width =  circleSize + "mm";
+            // circle.innerText = diameter
+            const circle_image = document.getElementById("circle-img")
+            circle_image.src = `./images/${circleSize}.png`
+            circle.style.width = circleSize + "mm";
             circle.style.height = circleSize + "mm";
         }
 
